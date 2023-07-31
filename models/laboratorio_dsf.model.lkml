@@ -29,11 +29,27 @@ explore: distribution_centers {}
 
 explore: events {}
 
-explore: order_items {}
+explore: order_items {
+  label: "(1) Orders, Items and Users"
+  view_name: order_items
+
+  join: inventory_items {
+    view_label: "Orders"
+    type: full_outer
+    relationship: one_to_one
+    sql_on: ${inventory_items.id} = ${order_items.inventory_item_id} ;;
+  }
+
+  join: users {
+    view_label: "Users"
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${order_items.user_id} = ${users.id} ;;
+  }
+}
 
 explore: users {}
 
 explore: inventory_items {}
 
 explore: products {}
-
