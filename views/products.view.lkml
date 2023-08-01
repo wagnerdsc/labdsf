@@ -58,8 +58,66 @@ view: products {
   }
 
   dimension: retail_price {
+
+    label: "Retail Price"
     type: number
     sql: ${TABLE}.retail_price ;;
+    action: {
+      label: "Update Price"
+      url: "https://us-central1-sandbox-trials.cloudfunctions.net/ecomm_inventory_writeback"
+      param: {
+        name: "Price"
+        value: "24"
+      }
+      form_param: {
+        name: "Discount"
+        label: "Discount Tier"
+        type: select
+        option: {
+          name: "5% off"
+        }
+        option: {
+          name: "10% off"
+        }
+        option: {
+          name: "20% off"
+        }
+        option: {
+          name: "30% off"
+        }
+        option: {
+          name: "40% off"
+        }
+        option: {
+          name: "50% off"
+        }
+        default: "20% off"
+      }
+      param: {
+        name: "retail_price"
+        value: "{{ retail_price._value }}"
+      }
+      param: {
+        name: "inventory_item_id"
+        value: "{{ inventory_items.id._value }}"
+      }
+      param: {
+        name: "product_id"
+        value: "{{ id._value }}"
+      }
+      param: {
+        name: "security_key"
+        value: "googledemo"
+      }
+    }
+  }
+
+  measure: category_count {
+    label: "Category Count"
+    alias: [category.count]
+    type: count_distinct
+    sql: ${category} ;;
+    drill_fields: [category, detail2*, -category_count] # don't show because it will always be 1
   }
 
   dimension: sku {
@@ -69,5 +127,15 @@ view: products {
   measure: count {
     type: count
     drill_fields: [name]
+  }
+  measure: brand_count {
+    label: "Brand Count"
+    type: count_distinct
+    sql: ${brand} ;;
+    drill_fields: [brand, detail2*, -brand_count] # show the brand, a bunch of counts (see the set below), don't show the brand count, because it will always be 1
+  }
+
+  set: detail2 {
+    fields: [category_count, brand_count, count, customers.count, orders.count, order_items.count, inventory_items.count, products.count]
   }
 }
