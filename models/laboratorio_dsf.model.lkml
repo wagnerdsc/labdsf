@@ -16,7 +16,45 @@ persist_with: ecommerce_etl
 
 explore: distribution_centers {}
 
-explore: events {}
+#########  Event Data Explores #########
+
+
+explore: events {
+  label: "(2) Web Event Data"
+
+  join: sessions_2 {
+    view_label: "Sessions"
+    type: left_outer
+    sql_on: ${events.session_id} =  ${sessions_2.session_id} ;;
+    relationship: many_to_one
+  }
+
+  join: session_landing_page {
+    view_label: "Session Landing Page"
+    from: events
+    type: left_outer
+    sql_on: ${sessions_2.landing_event_id} = ${session_landing_page.event_id} ;;
+    fields: [simple_page_info*]
+    relationship: one_to_one
+  }
+
+  join: product_viewed {
+    view_label: "Product Viewed"
+    from: products
+    type: left_outer
+    sql_on: ${events.viewed_product_id} = ${product_viewed.id} ;;
+    relationship: many_to_one
+  }
+
+  join: users {
+    view_label: "Users"
+    type: left_outer
+    sql_on: ${sessions_2.session_user_id} = ${users.id} ;;
+    relationship: many_to_one
+  }
+
+
+}
 
 explore: order_items {
   label: "(1) Orders, Items and Users"
