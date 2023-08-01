@@ -1,4 +1,4 @@
-view: order_facts {
+view: order_facts_2 {
   view_label: "Order Facts"
   derived_table: {
     explore_source: order_items {
