@@ -38,6 +38,15 @@ explore: events {
     relationship: one_to_one
   }
 
+  join: session_bounce_page {
+    view_label: "Session Bounce Page"
+    from: events
+    type: left_outer
+    sql_on: ${sessions_2.bounce_event_id} = ${session_bounce_page.event_id} ;;
+    fields: [simple_page_info*]
+    relationship: many_to_one
+  }
+
   join: product_viewed {
     view_label: "Product Viewed"
     from: products
@@ -53,7 +62,12 @@ explore: events {
     relationship: many_to_one
   }
 
-
+  join: user_order_facts_2 {
+    type: left_outer
+    sql_on: ${users.id} = ${user_order_facts_2.user_id} ;;
+    relationship: one_to_one
+    view_label: "Users"
+  }
 }
 
 explore: order_items {
