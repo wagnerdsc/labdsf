@@ -20,7 +20,7 @@ explore: distribution_centers {}
 
 
 explore: events {
-  label: "(2) Web Event Data"
+  label: "(2) Web Event Data Sa"
 
   join: sessions_2 {
     view_label: "Sessions"
